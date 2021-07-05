@@ -2,6 +2,8 @@ import { Container, Icon, Image, Menu, MenuItem } from "semantic-ui-react";
 import Link from "next/link";
 
 function Header() {
+  const user = false;
+
   return (
     <Menu fluid id="menu" inverted>
       <Container text>
@@ -21,34 +23,43 @@ function Header() {
             Cart
           </MenuItem>
         </Link>
-        <Link href="/create">
-          <MenuItem header>
-            <Icon name="add square" size="large" />
-            Create
-          </MenuItem>
-        </Link>
-        <Link href="/account">
-          <MenuItem header>
-            <Icon name="user" size="large" />
-            Account
-          </MenuItem>
-        </Link>
-        <MenuItem header>
-          <Icon name="sign out" size="large" />
-          Logout
-        </MenuItem>
-        <Link href="/login">
-          <MenuItem header>
-            <Icon name="sign in" size="large" />
-            Login
-          </MenuItem>
-        </Link>
-        <Link href="/signup">
-          <MenuItem header>
-            <Icon name="signup" size="large" />
-            Sign Up
-          </MenuItem>
-        </Link>
+        {user && (
+          <Link href="/create">
+            <MenuItem header>
+              <Icon name="add square" size="large" />
+              Create
+            </MenuItem>
+          </Link>
+        )}
+        {user ? (
+          <>
+            <Link href="/account">
+              <MenuItem header>
+                <Icon name="user" size="large" />
+                Account
+              </MenuItem>
+            </Link>
+            <MenuItem header>
+              <Icon name="sign out" size="large" />
+              Logout
+            </MenuItem>
+          </>
+        ) : (
+          <>
+            <Link href="/login">
+              <MenuItem header>
+                <Icon name="sign in" size="large" />
+                Login
+              </MenuItem>
+            </Link>
+            <Link href="/signup">
+              <MenuItem header>
+                <Icon name="signup" size="large" />
+                Sign Up
+              </MenuItem>
+            </Link>
+          </>
+        )}
       </Container>
     </Menu>
   );
