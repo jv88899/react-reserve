@@ -7,9 +7,21 @@ import {
   ModalContent,
   ModalHeader,
 } from "semantic-ui-react";
+import axios from "axios";
+import baseUrl from "../../utils/baseUrl";
+import { useRouter } from "next/router";
 
-function ProductAttributes({ description }) {
+function ProductAttributes({ description, _id }) {
   const [modal, setModal] = React.useState(false);
+  const router = useRouter();
+
+  async function handleDelete() {
+    const url = `${baseUrl}/api/product`;
+    const payload = { params: { _id } };
+    await axios.delete(url, payload);
+    router.push("/");
+  }
+
   return (
     <>
       <Header as="h3">About this product</Header>
@@ -32,7 +44,7 @@ function ProductAttributes({ description }) {
             icon="trash"
             labelPosition="right"
             content="Delete"
-            onClick={() => setModal(false)}
+            onClick={handleDelete}
           />
         </ModalActions>
       </Modal>
