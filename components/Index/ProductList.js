@@ -13,7 +13,9 @@ function ProductList({ products }) {
     }));
   }
 
-  return <CardGroup items={mapProductsToItems(products)} />;
+  return (
+    <CardGroup itemsPerRow="3" centered items={mapProductsToItems(products)} />
+  );
 }
 
 export default ProductList;
