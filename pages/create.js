@@ -27,6 +27,7 @@ function CreateProduct() {
   const [success, setSuccess] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
   const [disabled, setDisabled] = React.useState(true);
+  const [error, setError] = React.useState("");
 
   React.useEffect(() => {
     const isProduct = Object.values(product).every((el) => Boolean(el));
@@ -66,7 +67,7 @@ function CreateProduct() {
       setProduct(INITIAL_PRODUCT);
       setSuccess(true);
     } catch (error) {
-      console.error(error);
+      catchErrors(error, setError);
     } finally {
       setLoading(false);
     }
