@@ -67,6 +67,8 @@ function CreateProduct() {
       setSuccess(true);
     } catch (error) {
       console.error(error);
+    } finally {
+      setLoading(false);
     }
   }
 
