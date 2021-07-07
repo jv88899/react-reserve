@@ -54,18 +54,20 @@ function CreateProduct() {
   }
 
   async function handleSubmit(event) {
-    event.preventDefault();
-    setLoading(true);
-    const mediaUrl = await handleImageUpload();
-    console.log({ mediaUrl });
-    const url = `${baseUrl}/api/product`;
-    const { name, price, description } = product;
-    const payload = { name, price, description, mediaUrl };
-    const response = await axios.post(url, payload);
-    console.log({ response });
-    setLoading(false);
-    setProduct(INITIAL_PRODUCT);
-    setSuccess(true);
+    try {
+      event.preventDefault();
+      setLoading(true);
+      const mediaUrl = await handleImageUpload();
+      const url = `${baseUrl}/api/product`;
+      const { name, price, description } = product;
+      const payload = { name, price, description, mediaUrl };
+      const response = await axios.post(url, payload);
+      setLoading(false);
+      setProduct(INITIAL_PRODUCT);
+      setSuccess(true);
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   return (
