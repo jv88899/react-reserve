@@ -8,6 +8,7 @@ import {
   Segment,
 } from "semantic-ui-react";
 import Link from "next/link";
+import catchErrors from "../utils/catchErrors";
 
 const INITIAL_USER = {
   name: "",
@@ -18,6 +19,8 @@ const INITIAL_USER = {
 function Signup() {
   const [user, setUser] = React.useState(INITIAL_USER);
   const [disabled, setDisabled] = React.useState(true);
+  const [loading, setLoading] = React.useState(false);
+  const [error, setError] = React.useState("");
 
   React.useEffect(() => {
     const isUser = Object.values(user).every((el) => Boolean(el));
@@ -29,6 +32,19 @@ function Signup() {
     setUser((prevState) => ({ ...prevState, [name]: value }));
   }
 
+  async function handleSubmit(event) {
+    event.preventDefault();
+    try {
+      setLoading(true);
+      setError("");
+      console.log(user);
+    } catch (error) {
+      catchErrors(error, setError);
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
     <>
       <Message
@@ -38,7 +54,8 @@ function Signup() {
         content="Create a new account"
         color="teal"
       />
-      <Form>
+      <Form error={Boolean(error)} loading={loading} onSubmit={handleSubmit}>
+        <Message error header="Oops!" content={error} />
         <Segment>
           <FormInput
             fluid
@@ -73,7 +90,7 @@ function Signup() {
             onChange={handleChange}
           />
           <Button
-            disabled={disabled}
+            disabled={disabled || loading}
             icon="signup"
             type="submit"
             color="orange"
