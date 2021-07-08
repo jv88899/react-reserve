@@ -17,6 +17,12 @@ const INITIAL_USER = {
 
 function Signup() {
   const [user, setUser] = React.useState(INITIAL_USER);
+  const [disabled, setDisabled] = React.useState(true);
+
+  React.useEffect(() => {
+    const isUser = Object.values(user).every((el) => Boolean(el));
+    isUser ? setDisabled(false) : setDisabled(true);
+  }, [user]);
 
   function handleChange(event) {
     const { name, value } = event.target;
@@ -66,7 +72,13 @@ function Signup() {
             password={user.password}
             onChange={handleChange}
           />
-          <Button icon="signup" type="submit" color="orange" content="Signup" />
+          <Button
+            disabled={disabled}
+            icon="signup"
+            type="submit"
+            color="orange"
+            content="Signup"
+          />
         </Segment>
       </Form>
       <Message attached="bottom" warning>
