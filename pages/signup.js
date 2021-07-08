@@ -1,3 +1,4 @@
+import React from "react";
 import {
   Button,
   Form,
@@ -8,7 +9,20 @@ import {
 } from "semantic-ui-react";
 import Link from "next/link";
 
+const INITIAL_USER = {
+  name: "",
+  email: "",
+  password: "",
+};
+
 function Signup() {
+  const [user, setUser] = React.useState(INITIAL_USER);
+
+  function handleChange(event) {
+    const { name, value } = event.target;
+    setUser((prevState) => ({ ...prevState, [name]: value }));
+  }
+
   return (
     <>
       <Message
@@ -27,6 +41,8 @@ function Signup() {
             label="Name"
             placeholder="Name"
             name="name"
+            value={user.name}
+            onChange={handleChange}
           />
           <FormInput
             fluid
@@ -35,6 +51,9 @@ function Signup() {
             label="Email"
             placeholder="Email"
             name="email"
+            type="email"
+            value={user.email}
+            onChange={handleChange}
           />
           <FormInput
             fluid
@@ -43,6 +62,9 @@ function Signup() {
             label="Password"
             placeholder="Password"
             name="password"
+            type="password"
+            password={user.password}
+            onChange={handleChange}
           />
           <Button icon="signup" type="submit" color="orange" content="Signup" />
         </Segment>
