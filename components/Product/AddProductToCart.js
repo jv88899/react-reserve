@@ -3,18 +3,29 @@ import { Input } from "semantic-ui-react";
 import { Router, useRouter } from "next/router";
 import axios from "axios";
 import baseUrl from "../../utils/baseUrl";
+import catchErrors from "../../utils/catchErrors";
 import cookie from "js-cookie";
 
 function AddProductToCart({ user, productId }) {
   const [quantity, setQuantity] = React.useState(1);
+  const [loading, setLoading] = React.useState(false);
+  const [success, setSuccess] = React.useState(false);
   const router = useRouter();
 
   async function handleAddProductToCart() {
-    const url = `${baseUrl}/api/cart`;
-    const payload = { quantity, productId };
-    const token = cookie.get("token");
-    const headers = { headers: { Authorization: token } };
-    await axios.put(url, payload, headers);
+    try {
+      setLoading(true);
+      const url = `${baseUrl}/api/cart`;
+      const payload = { quantity, productId };
+      const token = cookie.get("token");
+      const headers = { headers: { Authorization: token } };
+      await axios.put(url, payload, headers);
+      setSuccess(true);
+    } catch (error) {
+      catchErrors(error, window.alert);
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -25,11 +36,20 @@ function AddProductToCart({ user, productId }) {
       placeholder="Quantity"
       onChange={(event) => setQuantity(Number(event.target.value))}
       action={
-        user
+        user && success
+          ? {
+              color: "blue",
+              content: "Item Added!",
+              icon: "plus cart",
+              disabled: true,
+            }
+          : user
           ? {
               color: "orange",
               content: "Add to Cart",
               icon: "plus cart",
+              loading,
+              disabled: loading,
               onClick: handleAddProductToCart,
             }
           : {
