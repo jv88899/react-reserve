@@ -5,6 +5,8 @@ import connectDb from "../../utils/connectDb";
 
 connectDb();
 
+const { ObjectId } = mongoose.Types;
+
 export default async (req, res) => {
   switch (req.method) {
     case "GET":
@@ -48,6 +50,27 @@ async function handlePutRequest(req, res) {
       req.headers.authorization,
       process.env.JWT_SECRET
     );
+    // 1) Get user cart based on userId
+    const cart = await Cart.findOne({ user: userId });
+    // 2) Check if product already exists in cart
+    const productExists = cart.products.some((doc) =>
+      ObjectId(productId).equals(doc.product)
+    );
+    // 3) -- if so, increment the quantity of the product
+    if (productExists) {
+      await Cart.findOneAndUpdate(
+        { _id: cart._id, "products.product": productId },
+        { $inc: { "products.$.quantity": quantity } }
+      );
+    } else {
+      // 4) -- if not, add new product with given quantity
+      const newProduct = { quantity, product: productId };
+      await Cart.findOneAndUpdate(
+        { _id: cart._id },
+        { $addToSet: { products: newProduct } }
+      );
+    }
+    res.status(200).send("Cart updated");
   } catch (error) {
     console.error(error);
     res.status(403).send("Please login again");
