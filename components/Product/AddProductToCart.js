@@ -1,10 +1,21 @@
 import React from "react";
 import { Input } from "semantic-ui-react";
 import { Router, useRouter } from "next/router";
+import axios from "axios";
+import baseUrl from "../../utils/baseUrl";
+import cookie from "js-cookie";
 
-function AddProductToCart({ user }) {
+function AddProductToCart({ user, productId }) {
   const [quantity, setQuantity] = React.useState(1);
   const router = useRouter();
+
+  async function handleAddProductToCart() {
+    const url = `${baseUrl}/api/cart`;
+    const payload = { quantity, productId };
+    const token = cookie.get("token");
+    const headers = { headers: { Authorization: token } };
+    await axios.put(url, payload, headers);
+  }
 
   return (
     <Input
@@ -15,7 +26,12 @@ function AddProductToCart({ user }) {
       onChange={(event) => setQuantity(Number(event.target.value))}
       action={
         user
-          ? { color: "orange", content: "Add to Cart", icon: "plus cart" }
+          ? {
+              color: "orange",
+              content: "Add to Cart",
+              icon: "plus cart",
+              onClick: handleAddProductToCart,
+            }
           : {
               color: "blue",
               content: "Sign Up To Purchase",
