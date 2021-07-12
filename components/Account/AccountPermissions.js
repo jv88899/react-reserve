@@ -13,6 +13,7 @@ import {
   TableHeaderCell,
   TableRow,
 } from "semantic-ui-react";
+import formatDate from "../../utils/formatDate";
 
 function AccountPermissions() {
   const [users, setUsers] = React.useState([]);
@@ -88,8 +89,8 @@ function UserPermission({ user }) {
       </TableCell>
       <TableCell>{user.name}</TableCell>
       <TableCell>{user.email}</TableCell>
-      <TableCell>{user.createdAt}</TableCell>
-      <TableCell>{user.updatedAt}</TableCell>
+      <TableCell>{formatDate(user.createdAt)}</TableCell>
+      <TableCell>{formatDate(user.updatedAt)}</TableCell>
       <TableCell>{admin ? "admin" : "user"}</TableCell>
     </TableRow>
   );
