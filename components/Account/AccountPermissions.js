@@ -59,9 +59,26 @@ function AccountPermissions() {
 
 function UserPermission({ user }) {
   const [admin, setAdmin] = React.useState(user.role === "admin");
+  const isFirstRun = React.useRef(true); // use this ref to prevent useEffect
+  // from running multiple times on mount
+
+  React.useEffect(() => {
+    // This prevents useEffect from running multiple times on mount
+    if (isFirstRun.current) {
+      isFirstRun.current = false;
+      return;
+    }
+    updatePermission();
+  }, [admin]);
 
   function handleChangePermission() {
     setAdmin((prevState) => !prevState);
+  }
+
+  async function updatePermission() {
+    const url = `${baseUrl}/api/account`;
+    const payload = { _id: user._id, role: admin ? "admin" : "user" };
+    await axios.put(url, payload);
   }
 
   return (
