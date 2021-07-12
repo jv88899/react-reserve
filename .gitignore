@@ -5,3 +5,4 @@ next.config.js
 dist
 next.config.*
 now.json
+.vercel
